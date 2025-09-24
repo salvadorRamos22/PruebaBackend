@@ -26,17 +26,24 @@ public class TransaccionService {
     @Autowired
     private BalanceTransaccionRepository balanceTransaccionRepository;
 
+    private final KafkaProducerService kafkaProducerService;
+
+    public TransaccionService(KafkaProducerService kafkaProducerService) {
+        this.kafkaProducerService = kafkaProducerService;
+    }
+
     public BalanceTransaction guardar(TransaccionDto transaccionDto) throws BusinessRuleException, Exception {
 
         Client existCliente = clientRepository.findByNumeroCliente(transaccionDto.getNumeroCliente());
         if (existCliente == null) {
 
-            CentralizedLogger.warning(getClass(),"Cliente no existe");
+            CentralizedLogger.warning(getClass(), "Cliente no existe");
 
             throw new BusinessRuleException("1025", HttpStatus.NOT_FOUND, "Cliente no existe");
         }
 
-        Balance existeBalance = balanceRepository.findByCuentaYCliente(transaccionDto.getNumeroCuenta(),transaccionDto.getNumeroCliente());
+        Balance existeBalance = balanceRepository.findByCuentaYCliente(transaccionDto.getNumeroCuenta(),
+                transaccionDto.getNumeroCliente());
 
         BalanceTransaction save = null;
 
@@ -49,6 +56,8 @@ public class TransaccionService {
             existeBalance.setBalance(balanceActual);
             balanceRepository.save(existeBalance);
 
+            kafkaProducerService.enviarMensaje("Transacción recibida");
+
         } else {
 
             Balance newBalance = new Balance();
@@ -58,6 +67,8 @@ public class TransaccionService {
             Balance saveBalance = balanceRepository.save(newBalance);
 
             save = guardarBalanceTransaccion(transaccionDto, saveBalance);
+
+            kafkaProducerService.enviarMensaje("Transacción recibida");
 
         }
 
