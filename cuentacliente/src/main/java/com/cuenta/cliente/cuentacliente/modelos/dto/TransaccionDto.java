@@ -17,6 +17,13 @@ public class TransaccionDto {
         this.tipoTransaccion = tipoTransaccion;
     }
 
+    
+
+    public TransaccionDto() {
+    }
+
+
+
     public Long getNumeroCliente() {
         return numeroCliente;
     }

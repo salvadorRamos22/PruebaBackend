@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Transacciones</title>
+</h:head>
+<h:body>
+<h:form>
+    <h3>Registrar Transacción</h3>
+    <h:outputLabel for="cliente" value="Numero de cliente:"/>
+    <h:inputText id="cliente" value="#{transaccionBean.transaccionDto.numeroCliente}" />
+
+    <h:outputLabel for="cuenta" value="Numero de cuenta:"/>
+    <h:inputText id="cuenta" value="#{transaccionBean.transaccionDto.numeroCuenta}" />  
+    
+    <h:outputLabel for="monto" value="Monto:"/>
+    <h:inputText id="monto" value="#{transaccionBean.transaccionDto.monto}" />
+
+    <h:outputLabel for="tipotransaccion" value="Tipo transacción:"/>
+    <p:selectOneMenu id="tipotransaccion" value="#{transaccionBean.tipoTransaccion}" >
+        <f:selectItem itemLabel="Seleccione" itemValue="" />
+        <f:selectItems value="#{transaccionBean.tiposTransacciones}" />
+    </p:selectOneMenu>
+
+    <p:commandButton value="Guardar" action="#{transaccionBean.guardar}"
+                     update="messages" />
+
+    <p:messages id="messages" autoUpdate="true" closable="true" />
+
+</h:form>
+</h:body>
+</html>

@@ -14,9 +14,13 @@ import com.cuenta.cliente.cuentacliente.repositories.BalanceRepository;
 import com.cuenta.cliente.cuentacliente.repositories.BalanceTransaccionRepository;
 import com.cuenta.cliente.cuentacliente.repositories.ClientRepository;
 
+/**
+ * Clase service que contiene la lógica de negocio para regisrar una transacción
+ */
 @Service
 public class TransaccionService {
 
+    //Inyección de dependencias
     @Autowired
     private ClientRepository clientRepository;
 
@@ -32,6 +36,13 @@ public class TransaccionService {
         this.kafkaProducerService = kafkaProducerService;
     }
 
+    /**
+     * Método para guardar transacciones
+     * @param transaccionDto Objeto que contiene datos de transacción
+     * @return Objeto BalanceTransacction del registro recien guardado
+     * @throws BusinessRuleException
+     * @throws Exception
+     */
     public BalanceTransaction guardar(TransaccionDto transaccionDto) throws BusinessRuleException, Exception {
 
         Client existCliente = clientRepository.findByNumeroCliente(transaccionDto.getNumeroCliente());
@@ -76,6 +87,12 @@ public class TransaccionService {
 
     }
 
+    /**
+     * Método para guardar BalanceTransaccion
+     * @param transaccionDto Datos de transacción
+     * @param balance Objeto Balance
+     * @return Objeto BalanceTransaction
+     */
     private BalanceTransaction guardarBalanceTransaccion(TransaccionDto transaccionDto, Balance balance) {
 
         BalanceTransaction newBalanceTransaccion = new BalanceTransaction();
